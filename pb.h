@@ -326,6 +326,9 @@ struct pb_msgdesc_s {
     pb_size_t field_count;
     pb_size_t required_field_count;
     pb_size_t largest_tag;
+
+    // (XXX) Added by Arya, there should be an option to turn this off
+    const char * const * field_names;
 };
 
 /* Iterator for message descriptor */
@@ -508,6 +511,10 @@ struct pb_extension_s {
         msgname ## _FIELDLIST(PB_GEN_SUBMSG_INFO, structname) \
         NULL \
     }; \
+    const char * const structname ## _field_names[] = \
+    { \
+        msgname ## _FIELDLIST(PB_GEN_FIELD_NAMES, structname) \
+    }; \
     const pb_msgdesc_t structname ## _msg = \
     { \
        structname ## _field_info, \
@@ -517,8 +524,9 @@ struct pb_extension_s {
        0 msgname ## _FIELDLIST(PB_GEN_FIELD_COUNT, structname), \
        0 msgname ## _FIELDLIST(PB_GEN_REQ_FIELD_COUNT, structname), \
        0 msgname ## _FIELDLIST(PB_GEN_LARGEST_TAG, structname), \
+       structname ## _field_names, \
     }; \
-    msgname ## _FIELDLIST(PB_GEN_FIELD_INFO_ASSERT_ ## width, structname)
+    msgname ## _FIELDLIST(PB_GEN_FIELD_INFO_ASSERT_ ## width, structname); \
 
 #define PB_GEN_FIELD_COUNT(structname, atype, htype, ltype, fieldname, tag) +1
 #define PB_GEN_REQ_FIELD_COUNT(structname, atype, htype, ltype, fieldname, tag) \
@@ -607,6 +615,9 @@ struct pb_extension_s {
                    PB_DATA_SIZE_ ## atype(_PB_HTYPE_ ## htype, structname, fieldname), \
                    PB_SIZE_OFFSET_ ## atype(_PB_HTYPE_ ## htype, structname, fieldname), \
                    PB_ARRAY_SIZE_ ## atype(_PB_HTYPE_ ## htype, structname, fieldname))
+
+#define STR(x) #x
+#define PB_GEN_FIELD_NAMES(structname, atype, htype, ltype, fieldname, tag) STR(fieldname),
 
 #define PB_FIELDINFO_ASSERT_AUTO2(width, tag, type, data_offset, data_size, size_offset, array_size) \
     PB_FIELDINFO_ASSERT_AUTO3(width, tag, type, data_offset, data_size, size_offset, array_size)

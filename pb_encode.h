@@ -178,6 +178,12 @@ bool pb_encode_float_as_double(pb_ostream_t *stream, float value);
  */
 bool pb_encode_submessage(pb_ostream_t *stream, const pb_msgdesc_t *fields, const void *src_struct);
 
+/************************************************
+ * (XXX) Arya: Exposed for pb_print.c           *
+ ************************************************/
+
+bool pb_check_proto3_default_value(const pb_field_iter_t *field);
+
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
