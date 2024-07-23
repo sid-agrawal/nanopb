@@ -6,6 +6,7 @@
 #include "pb.h"
 #include "pb_print.h"
 #include "pb_common.h"
+#include "pb_encode.h"
 #include <stdio.h>
 
 /* Use the GCC warn_unused_result attribute to check that all return values
@@ -23,7 +24,7 @@
  **************************************/
 static bool checkreturn print_basic_field(const pb_field_iter_t *field, int indent);
 static bool checkreturn print_array(pb_field_iter_t *field, int indent);
-static bool checkreturn print_submessage(pb_field_iter_t *field, int indent);
+static bool checkreturn print_submessage(const pb_field_iter_t *field, int indent);
 static bool checkreturn print_field(pb_field_iter_t *field, int indent);
 static bool checkreturn pb_print_internal(const pb_msgdesc_t *fields, const void *src_struct, int indent);
 static bool field_is_empty(pb_field_iter_t *field);
@@ -228,7 +229,7 @@ static bool checkreturn print_field(pb_field_iter_t *field, int indent)
     }
 }
 
-static bool checkreturn print_submessage(pb_field_iter_t *field, int indent)
+static bool checkreturn print_submessage(const pb_field_iter_t *field, int indent)
 {
     if (field->submsg_desc == NULL)
         return false;
