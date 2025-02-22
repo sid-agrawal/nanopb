@@ -63,6 +63,8 @@ static bool checkreturn print_int(const pb_field_iter_t *field)
  * is available to the encoder directly. */
 static bool checkreturn print_basic_field(const pb_field_iter_t *field, int indent)
 {
+    const pb_bytes_array_t *bytes_array;
+    const pb_byte_t *bytes;
     if (!field->pData)
     {
         /* Missing pointer field */
@@ -81,7 +83,7 @@ static bool checkreturn print_basic_field(const pb_field_iter_t *field, int inde
         return print_int(field);
 
     case PB_LTYPE_FIXED32:
-        const pb_byte_t *bytes = (const pb_byte_t *)field->pData;
+        bytes = (const pb_byte_t *)field->pData;
         for (int i = 0; i < 4; i++)
         {
             printf("%x", bytes[i] & 0xf);
@@ -96,7 +98,7 @@ static bool checkreturn print_basic_field(const pb_field_iter_t *field, int inde
         return true;
 
     case PB_LTYPE_BYTES:
-        const pb_bytes_array_t *bytes_array = (const pb_bytes_array_t *)field->pData;
+        bytes_array = (const pb_bytes_array_t *)field->pData;
         for (int i = 0; i < bytes_array->size; i++)
         {
             printf("%x", bytes_array->bytes[i] & 0xf);
